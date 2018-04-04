@@ -36,7 +36,7 @@ exports.login = function(req, res){
      
       var sql="SELECT id, first_name, last_name, user_name FROM `users` WHERE `user_name`='"+name+"' and password = password('"+pass+"')";                           
       db.query(sql, function(err, results){      
-         if(results.length){
+         if(results && results.length){
             req.session.userId = results[0].id;
             req.session.user = results[0];
             console.log('UserId:' + results[0].id);
