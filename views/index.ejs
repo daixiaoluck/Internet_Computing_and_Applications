@@ -1,0 +1,100 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>COMP5322 - Group Project</title>
+    <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One|Montserrat:300" rel="stylesheet">
+
+    <!--   <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet"> -->
+    <link href="../static/css/video_new.css" rel="stylesheet">
+    <script src="https://unpkg.com/video.js/dist/video.js"></script>
+    <script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>
+
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" />
+    <link rel='stylesheet' href='../static/css/custom.css' />
+
+    <link rel='stylesheet' href='../static/css/animate-custom.css' />
+    <link rel='stylesheet' href='../static/css/animate-style.css' />
+</head>
+
+<body>
+    <div class="container">
+
+
+        <div class="row rowvcenter">
+            <div id="banner" class="col-sm-12 col-md-8">Be a Filmaker</div>
+            <div class=" col-sm-12  col-md-offset-0  col-md-4 col-md-offset-8">
+                <a class="hiddenanchor" id="toregister"></a>
+                <a class="hiddenanchor" id="tologin"></a>
+                <div id="wrapper">
+                    <div id="login" class="animate form">
+                            <form id="loginform" class="form-group" role="form" method="post" action="/login">
+                            <h1>Log in</h1>
+
+                            <p>
+                                <label for="login-username">Username</label>
+                                <input id="login-username" type="text" class="form-control" name="user_name" value="" placeholder="username">
+                            </p>
+                            <p>
+
+
+                                <label for="login-password">Password</label>
+                                <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
+
+                            </p>
+                            <p class="login button">
+                                <input type="submit" value="Login" />
+                            </p>
+                            <p class="change_link">
+                                Not a member yet ?
+                                <a href="#toregister" class="to_register">Join us</a>
+                            </p>
+                        </form>
+                    </div>
+
+                    <div id="register" class="animate form">
+                            <form class="form-horizontal" role="form" method="post" action="/signup" onSubmit="return checkblank(this);">
+                            <h1> Sign up </h1>
+                            <p>
+                                
+
+                                <label for="first_name" >* First Name</label>
+                                <input name="first_name" required="required" type="text" placeholder="First Name"/>
+                            </p>
+                            <p>
+                                <label for="last_name">* Last Name</label>
+                                <input id="last_name" name="last_name" required="required" type="text" placeholder="Last Name" />
+                            </p>
+                            <p>
+                                <label for="mob_no">* Mobile Number</label>
+                                <input id="mob_no" name="mob_no" required="required" type="text" placeholder="Mobile Number" />
+                            </p>
+                            <p>
+                                <label for="user_name">* User Name</label>
+                                <input id="user_name" name="user_name" required="required" type="text" placeholder="User Name" />
+                            </p>
+                            <p>
+                                <label for="password" class="youpasswd" data-icon="p">* Password </label>
+                                <input id="password" name="password" required="required" type="password" placeholder="Password" />
+                            </p>
+                            <p>
+                                <label for="passwordsignup_confirm" class="youpasswd" data-icon="p">Please confirm your password </label>
+                                <input id="passwordsignup_confirm" name="passwordsignup_confirm" required="required" type="password" placeholder="eg. X8df!90EO"
+                                />
+                            </p>
+                            <p class="signin button">
+                                <input type="submit" value="Sign up" />
+                            </p>
+                            <p class="change_link">
+                                Already a member ?
+                                <a href="#tologin" class="to_register"> Go and log in </a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        <%- include footer %>

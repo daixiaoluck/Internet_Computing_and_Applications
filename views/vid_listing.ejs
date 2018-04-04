@@ -1,0 +1,77 @@
+<%- include header %>
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!--   <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet"> -->
+
+  <script type="text/javascript" src="http://fredwu.github.io/jquery-endless-scroll/js/jquery.min.js"></script>
+  <script type="text/javascript" src="http://fredwu.github.io/jquery-endless-scroll/js/jquery.endless-scroll.js"></script>
+
+  <style type="text/css">
+    #images {
+      height: 100%;
+      width: 100% !important;
+      overflow-x: hidden;
+      text-align: center;
+      list-style: none;
+    }
+  </style>
+  <script type="text/javascript" charset="utf-8">
+    $(function () {
+      $('#list').endlessScroll({
+        pagesToKeep: 10,
+        fireOnce: false,
+        insertBefore: "#list div:first",
+        insertAfter: "#list div:last",
+        content: function (i, p) {
+          console.log(i, p)
+          return '<li>' + p + '</li>'
+        },
+        ceaseFire: function (i) {
+          if (i >= 10) {
+            return true;
+          }
+        },
+        intervalFrequency: 5
+      });
+
+      $('#images').scrollTop(101);
+      var images = $("ul#images").clone().find("li");
+      $('#images').endlessScroll({
+        pagesToKeep: 5,
+        inflowPixels: 100,
+        fireDelay: 10,
+        content: function (i, p, d) {
+          console.log(i, p, d)
+          return images.eq(Math.floor(Math.random() * 8))[0].outerHTML;
+        }
+      });
+    });
+  </script>
+
+  </head>
+
+  <body>
+    <div class="container">
+
+      <%- include menu.html %>
+
+
+
+          </div>
+
+
+          <div class="row">
+            <ul id="images">
+              <% videos.forEach(function(video) { %>
+                <li>
+                  <%= video.name %> -
+                    <%= video.userid %>
+                </li>
+                <% }); %>
+            </ul>
+          </div>
+
+        </body>
+
+        </html>

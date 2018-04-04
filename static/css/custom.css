@@ -1,0 +1,76 @@
+
+ :root {
+    --blue: #007bff;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #e83e8c;
+    --red: #dc3545;
+    --orange: #fd7e14;
+    --yellow: #ffc107;
+    --green: #28a745;
+    --teal: #20c997;
+    --cyan: #17a2b8;
+    --white: #fff;
+    --gray: #6c757d;
+    --gray-dark: #343a40;
+    --primary: #007bff;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --grey1:#474747;
+    --grey2:#757575;
+    --grey3:#a3a3a3;
+    --grey4:#cacaca;
+    --boxborder:#fff;
+    --title-bg:#1a1a1a;
+    --title-txt:#c2c2c2;
+    --body-bg:#727272;
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --font-family-sans-serif: Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI",  "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
+}
+
+.my_drag_area {
+    height: 500px;
+}
+
+html {
+	background: url(download.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+
+body{
+    color: #fff;
+}
+
+#banner{
+    font-size: 100px;
+    font-family:'Alfa Slab One',  "Helvetica Neue";
+}
+
+input[type=text], input[type=password]{
+    background-color: var(--title-bg);
+    color: var(--title-txt);
+}
+
+menu{
+    display: inline;
+}
+
+.logo{
+	background: url(logo.png) no-repeat;
+    height:218px;
+    width:100%;
+}
