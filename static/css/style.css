@@ -1,0 +1,16 @@
+.menu{
+    font-size: 16px;
+}
+
+.menu ul{
+    list-style-type: none;
+    display: inline;
+}
+
+.menuitem{
+    display: inline;
+}
+
+.my_drag_area{
+    height: 500px;
+}
