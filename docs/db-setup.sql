@@ -34,3 +34,9 @@ CREATE TABLE `videos` (
   `former_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
+
+ALTER SCHEMA `comp5322`  DEFAULT CHARACTER SET utf8 ;
+ALTER TABLE `comp5322`.`videos` 
+CHARACTER SET = utf8 ;
+ALTER TABLE `comp5322`.`users` 
+CHARACTER SET = utf8 ;

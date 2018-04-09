@@ -124,7 +124,7 @@ function insert_vid(uploaded_file, request, response) {
 
         let sql = 'INSERT INTO videos (\`name\`, \`userid\`,\`former_name\`) VALUES (?,?,?);'
 
-        db.query(sql, [filename, userId, former_name], function(err, results) {
+        db.query(sql, [filename, userId, mysql.escape(former_name)], function(err, results) {
            if (err) {
                 reject(err)
             } else {
