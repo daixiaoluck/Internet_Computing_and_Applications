@@ -285,3 +285,4 @@ process.on('uncaughtException', exitHandler.bind(null, {
 
 server.listen(8081, () => {
     console.log('http://localhost:8081')
+})
