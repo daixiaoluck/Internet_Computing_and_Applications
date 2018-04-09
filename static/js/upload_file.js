@@ -2,26 +2,20 @@ function segmentation_modal(){
     $('#uploaded_modal').modal({
         backdrop:'static'
     })
-    let ws = new WebSocket('ws://localhost:8081/test_api')
-    ws.onmessage = function(e){
-        let progress_percentage = parseInt(e.data,10)
-        if(isNaN(progress_percentage) === false){
-            $('#segmentation_progress').width(`${progress_percentage}%`)
-
+    let websocket = io.connect()
+    let $segmentation_progress = $('#segmentation_progress')
+    websocket.on('push_from_server',(data)=>{
+        if($.isNumeric(data)){
+            let progress_percentage = parseInt(data,10)
+            $segmentation_progress.width(`${progress_percentage}%`)
             if(progress_percentage === 100)
             {
                 $("#my_video_link").removeClass('d-none')
             }
-        }else{
+        } else{
             alert('The data from server is wrong, its value:',progress_percentage)
         }
-    }
-// only for debug
-    ws.onclose = function(event){
-        console.log('Was clean?',event.wasClean)
-        console.log('Code=',event.code)
-        console.log('Reason=',event.reason)
-    }
+    })
 }
 let uploader = new plupload.Uploader({
     url : '/upload',

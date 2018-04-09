@@ -14,7 +14,7 @@ var app = express();
 var mysql = require('mysql');
 var bodyParser = require("body-parser");
 var connection = mysql.createConnection({
-    host: '192.168.1.119',
+    host: 'localhost',
     // host     : 'localhost',
     user: 'comp5322',
     password: 'comp5322project',
@@ -35,7 +35,7 @@ const events = require('events')
 
 const template = require('art-template')
 const formidable = require('formidable')
-const WebSocket = require('ws')
+const socket_io = require('socket.io')
 const ffmpeg = require('fluent-ffmpeg')
 
 function display_upload_file_html(request, response) {
@@ -135,24 +135,6 @@ function insert_vid(uploaded_file, request, response) {
 }
 global.insert_vid = insert_vid;
 
-function websocket_desperation(){
-    let ws = new WebSocket.Server({
-        server: server,
-        path: '/test_api'
-    })
-
-    ws.on('connection', (socket) => {
-        eventEmit.on('segmentation_process', percentage => {
-            socket.send(percentage)
-        })
-    })
-
-// for debug
-    ws.on('error',error=>{
-        console.log('ws error: ',error)
-    })
-}
-
 function call_ffmpeg(uploaded_file) {
 
     let file_path = uploaded_file.path
@@ -160,9 +142,29 @@ function call_ffmpeg(uploaded_file) {
     var basename = path.basename(file_path);
     var filename = basename.split('.')[0];
     var ext = basename.split('.')[1];
+
     let ffmpeg_instance = ffmpeg(file_path)
+    // because int_percentage is negative, once segmentation starts, the progress must be larger than it.
+    let int_percentage = -1
+
     return new Promise((resolve, reject) => {
-        ffmpeg_instance.addOptions([
+        ffmpeg_instance
+        .thumbnail({
+            timestamps: ['50%'],
+            filename: filename + '.png',
+            folder: 'static/video/',
+            size: '320x240'
+        })
+        .on('error', (err, stdout, stderr)=>{
+            reject(err)
+        })
+        .on('end', (stdout, stderr)=>{
+            resolve()
+        })
+    })
+    .then(()=>{
+        return new Promise((resolve, reject)=>{
+            ffmpeg_instance.addOptions([
                 '-profile:v baseline', // baseline profile (level 3.0) for H264 video codec
                 '-level 3.0',
                 '-start_number 0', // start the first .ts segment at index 0
@@ -170,30 +172,24 @@ function call_ffmpeg(uploaded_file) {
                 '-hls_list_size 0', // Maxmimum number of playlist entries (0 means all entries/infinite)
                 '-f hls' // HLS format
             ])
-            .thumbnail({
-              timestamps: ['50%'],
-              filename: filename + '.png',
-              folder: 'static/video/',
-              size: '320x240'
-            })
             .output('static/video/' + filename + '.m3u8')
             .on('progress', progress => {
-                eventEmit.emit('segmentation_process', progress.percent)
+                if( int_percentage < parseInt(progress.percent,10)){
+                    int_percentage = parseInt(progress.percent,10)
+                    // console.log('Ffmpeg Progress: ',progress.percent)
+                    // console.log('Progress After parseInt: ',int_percentage)
+                    eventEmit.emit('segmentation_process', int_percentage)
+                }
             })
             .on('error', (err, stdout, stderr) => {
                 reject(err)
             })
-            .on('end', () => {
+            .on('end', (stdout, stderr) => {
                 eventEmit.emit('segmentation_process', 100)
                 resolve()
             })
-            .run();
-        // ffmepg_instance.thumbnail({
-        //     timestamps: ['50%'],
-        //     filename: filename + '.png',
-        //     folder: 'static/video/',
-        //     size: '320x240'
-        // }).run();
+            .run()
+        })
     })
 }
 global.call_ffmpeg = call_ffmpeg;
@@ -231,21 +227,22 @@ app.get('/videos/:videoId', user.myvideo); //to render my_video.html
 app.get('/static/*', display_static_resoures); //static resources
 app.post('/upload', async function(request, response) {
     try{
-        websocket_desperation()
         let uploaded_file = await upload_process(request, response)
         await insert_vid(uploaded_file, request, response)
-        await call_ffmpeg(uploaded_file);
+        await call_ffmpeg(uploaded_file)
     }catch(err){
         console.error('upload出現例外了。請看例外詳情： ',err)
     }
 });
 //Middleware
-// Second Integration Part of Shawn's code ( due to websocket )
-// Main part has been moved to websocket_desperation
 let eventEmit = new events.EventEmitter()
-
 let server = http.createServer(app)
-
+let io = socket_io.listen(server)
+io.sockets.on('connection', function (socket) {
+    eventEmit.on('segmentation_process',(data)=>{
+        socket.emit('push_from_server', data);
+    })
+});
 // process.stdin.resume();//so the program will not close instantly
 
 function exitHandler(options, err) {
