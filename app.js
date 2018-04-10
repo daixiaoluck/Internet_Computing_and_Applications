@@ -14,8 +14,8 @@ var app = express();
 var mysql = require('mysql');
 var bodyParser = require("body-parser");
 var connection = mysql.createConnection({
-    host: '192.168.1.119',
-    // host     : 'localhost',
+    // host: '192.168.1.119',
+    host     : 'localhost',
     user: 'comp5322',
     password: 'comp5322project',
     database: 'comp5322'
@@ -35,8 +35,8 @@ const events = require('events')
 
 const template = require('art-template')
 const formidable = require('formidable')
-const WebSocket = require('ws')
-const ffmpeg = require('fluent-ffmpeg')
+const socket_io = require('socket.io')
+const fluent_ffmpeg = require('fluent-ffmpeg')
 
 function display_upload_file_html(request, response) {
     return new Promise((resolve, reject) => {
@@ -135,32 +135,32 @@ function insert_vid(uploaded_file, request, response) {
 }
 global.insert_vid = insert_vid;
 
-function websocket_desperation(){
-    let ws = new WebSocket.Server({
-        server: server,
-        path: '/test_api'
-    })
-
-    ws.on('connection', (socket) => {
-        eventEmit.on('segmentation_process', percentage => {
-            socket.send(percentage)
-        })
-    })
-
-// for debug
-    ws.on('error',error=>{
-        console.log('ws error: ',error)
-    })
-}
-
-function call_ffmpeg(uploaded_file) {
+function ffmpeg_thumbnail(uploaded_file){
 
     let file_path = uploaded_file.path
+    let filename = path.parse(file_path).name
+    let ffmpeg_instance = fluent_ffmpeg(file_path)
+    return new Promise((resolve, reject) => {
+        ffmpeg_instance
+            .thumbnail({
+                timestamps: ['50%'],
+                filename: filename + '.png',
+                folder: 'static/video/',
+                size: '320x240'
+            })
+            .on('error', (err, stdout, stderr) => {
+                reject(err)
+            })
+            .on('end', () => {
+                resolve()
+            })
+    })
+}
+function ffmpeg_segmentation(uploaded_file) {
 
-    var basename = path.basename(file_path);
-    var filename = basename.split('.')[0];
-    var ext = basename.split('.')[1];
-    let ffmpeg_instance = ffmpeg(file_path)
+    let file_path = uploaded_file.path
+    let filename = path.parse(file_path).name
+    let ffmpeg_instance = fluent_ffmpeg(file_path)
     return new Promise((resolve, reject) => {
         ffmpeg_instance.addOptions([
                 '-profile:v baseline', // baseline profile (level 3.0) for H264 video codec
@@ -170,12 +170,6 @@ function call_ffmpeg(uploaded_file) {
                 '-hls_list_size 0', // Maxmimum number of playlist entries (0 means all entries/infinite)
                 '-f hls' // HLS format
             ])
-            .thumbnail({
-              timestamps: ['50%'],
-              filename: filename + '.png',
-              folder: 'static/video/',
-              size: '320x240'
-            })
             .output('static/video/' + filename + '.m3u8')
             .on('progress', progress => {
                 eventEmit.emit('segmentation_process', progress.percent)
@@ -187,16 +181,10 @@ function call_ffmpeg(uploaded_file) {
                 eventEmit.emit('segmentation_process', 100)
                 resolve()
             })
-            .run();
-        // ffmepg_instance.thumbnail({
-        //     timestamps: ['50%'],
-        //     filename: filename + '.png',
-        //     folder: 'static/video/',
-        //     size: '320x240'
-        // }).run();
+            .run()
     })
 }
-global.call_ffmpeg = call_ffmpeg;
+global.ffmpeg_segmentation = ffmpeg_segmentation;
 //Integrate with Shawn's code end
 
 // all environments
@@ -231,20 +219,23 @@ app.get('/videos/:videoId', user.myvideo); //to render my_video.html
 app.get('/static/*', display_static_resoures); //static resources
 app.post('/upload', async function(request, response) {
     try{
-        websocket_desperation()
         let uploaded_file = await upload_process(request, response)
         await insert_vid(uploaded_file, request, response)
-        await call_ffmpeg(uploaded_file);
+        await ffmpeg_thumbnail(uploaded_file)
+        await ffmpeg_segmentation(uploaded_file)
     }catch(err){
-        console.error('upload出現例外了。請看例外詳情： ',err)
+        console.error('Upload function point occurs an exception：',err)
     }
 });
 //Middleware
-// Second Integration Part of Shawn's code ( due to websocket )
-// Main part has been moved to websocket_desperation
 let eventEmit = new events.EventEmitter()
-
 let server = http.createServer(app)
+let io = socket_io.listen(server)
+io.sockets.on('connection', function (socket) {
+    eventEmit.on('segmentation_process',(data)=>{
+        socket.emit('push_from_server', data)
+    })
+})
 
 // process.stdin.resume();//so the program will not close instantly
 

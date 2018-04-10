@@ -1,11 +1,6 @@
     {{include './header.ejs' data}}
 
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!--   <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet"> -->
-    <link href="../static/css/video_new.css" rel="stylesheet">
-    <script src="https://unpkg.com/video.js/dist/video.js"></script>
-    <script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>
-
 
     <script src="../static/js/plupload.full.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -15,11 +10,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
-    <style>
-            .my_drag_area {
-                height: 500px;
-            }
-        </style>
 </head>
 
 <body>
@@ -46,7 +36,8 @@
                     </p>
                     <p id="my_video_link" class="text-right d-none">
                         <span>Enjoy your movie meme:</span>
-                        <a href="/home/my_video">Your Video Meme</a>
+                        <!--<a href="/home/my_video">Your Video Meme</a>-->
+                        <a href="/home/vid_listing">Your Video Meme</a>
                     </p>
                 </div>
             </div>
@@ -68,7 +59,7 @@
                 <input type="button" class="btn btn-primary" value="Select a File" id="browse">
             </div>
         </div>
-        <!-- <div class="row w-75 mx-auto">
+        <div class="row w-75 mx-auto">
             <div class="col-4">
                 <span>The progress of uploading:</span>
             </div>
@@ -77,51 +68,10 @@
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" id="uploading_progress"></div>
                 </div>
             </div>
-        </div> -->
+        </div>
     </div>
 
     
-    <script>
-        function segmentation_modal(){
-            $('#uploaded_modal').modal({
-                backdrop:'static'
-            })
-            let ws = new WebSocket('ws://localhost:8081/test_api')
-            ws.onmessage = function(e){
-                let progress_percentage = parseInt(e.data,10)
-                if(isNaN(progress_percentage) === false){
-                    $('#segmentation_progress').width(`${progress_percentage}%`)
-
-                    if(progress_percentage === 100)
-                    {
-                        $("#my_video_link").removeClass('d-none')
-                    }
-                }else{
-                    alert('The data from server is wrong, its value:',progress_percentage)
-                }
-            }
-        }
-        let uploader = new plupload.Uploader({
-            url : '/upload',
-            // 一定要有browse_button哦
-            browse_button : 'browse',
-            drop_element:'drag-area',
-            filters:{
-                mime_types:[
-                    {title:"Video files",extensions:"mov,mp4,m4a"}
-                ]
-            }
-        })
-        uploader.init()
-        uploader.bind('FilesAdded',function(uploader,files){
-            uploader.start()
-        })
-        uploader.bind('UploadProgress',function(uploader,file){
-            $('#uploading_progress').css('width',`${file.percent}%`)
-            if(file.percent === 100){
-                segmentation_modal();
-            }
-        })
-    </script>
+    <script src="/static/js/upload_file.js"></script>
 
  {{include './footer.ejs' data}}
