@@ -4,6 +4,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <!--   <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet"> -->
 
+  <script src='https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.js'></script>
+  <script src='https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js'></script>
   <script type="text/javascript" src="http://fredwu.github.io/jquery-endless-scroll/js/jquery.min.js"></script>
   <script type="text/javascript" src="http://fredwu.github.io/jquery-endless-scroll/js/jquery.endless-scroll.js"></script>
 
@@ -49,6 +51,17 @@
     });
   </script>
 
+
+<style type="text/css">
+  #images {
+      height: 100%;
+      width: 100% !important;
+      overflow-x: hidden;
+      text-align: center;
+      list-style: none;
+  }
+</style>
+
   </head>
 
   <body>
@@ -62,12 +75,11 @@
 
 
           <div class="row">
-            <ul>
+            <ul id="images">
                 <% videos.forEach(function(video) { %>
-                  <a href="/videos/<%= video.name %>"> <li><%= video.name %> - <%= video.userid %></li> </a>
+                  <li>    <a href="/videos/<%= video.name %>"><%= video.name %> - <%= video.userid %>  </a></li> 
                <% }); %>
                
-
 <!--             
                <ul id="images">
               
