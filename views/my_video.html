@@ -6,7 +6,17 @@
     <link href="../static/css/video_new.css" rel="stylesheet">
     <script src="https://unpkg.com/video.js/dist/video.js"></script>
     <script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>
-
+    <style type="text/css">
+        .video-js button {
+                margin-left: calc(50% - 42px);
+                /*margin-top: calc(50% - 20px);;*/
+            }
+    </style>
+    <script>
+        $( document ).ready(function() {
+            $('.video-js button').css('margin-top',($('.vjs-text-track-display').height()/2-21)+'px');
+        }); 
+    </script>
 </head>
 
 <body>

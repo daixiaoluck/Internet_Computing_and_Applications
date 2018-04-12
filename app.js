@@ -14,8 +14,8 @@ var app = express();
 var mysql = require('mysql');
 var bodyParser = require("body-parser");
 var connection = mysql.createConnection({
-    // host: '192.168.1.119',
-    host     : 'localhost',
+    host: '192.168.1.119',
+    // host     : 'localhost',
     user: 'comp5322',
     password: 'comp5322project',
     database: 'comp5322'

@@ -131,12 +131,12 @@ exports.uploadvideo=function(req,res){
            
    var user =  req.session.user,
    userId = req.session.userId;
-   //console.log('userId='+userId);
-   // if(userId == null){
-   //    console.log('User session not found, redirect to login page.');
-   //    res.redirect("/login");
-   //    return;
-   // }
+   console.log('userId='+userId);
+   if(userId == null){
+      console.log('User session not found, redirect to login page.');
+      res.redirect("/login");
+      return;
+   }
 
    var sql="SELECT * FROM `videos` WHERE `userid`='"+userId+"'";
    db.query(sql, function(err, results) {
