@@ -14,8 +14,8 @@ var app = express();
 var mysql = require('mysql');
 var bodyParser = require("body-parser");
 var connection = mysql.createConnection({
-    host: '192.168.1.119',
-    // host     : 'localhost',
+    // host: '192.168.1.119',
+    host:'localhost',
     user: 'comp5322',
     password: 'comp5322project',
     database: 'comp5322'
@@ -45,7 +45,6 @@ function display_upload_file_html(request, response) {
             'Content-type': 'text/html'
         })
         response.end(template(file_path, {
-            title: 'Upload File',
             timestamp:new Date().getTime()
         }))
         resolve()
@@ -94,7 +93,6 @@ function upload_process(request, response) {
         form.uploadDir = __dirname + '/static/uploaded'
         form.maxFileSize = 50 * 1024 * 1024
         form.keepExtensions = true
-        console.log()
         form.parse(request, function(err, fields, files) {
             if (err) {
                 reject(err)

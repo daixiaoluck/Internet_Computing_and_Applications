@@ -25,15 +25,19 @@ let uploader = new plupload.Uploader({
         mime_types:[
             {title:"Video files",extensions:"mov,mp4,m4a"}
         ]
+    },
+    init:{
+        FilesAdded:function(uploader,files){
+            let $file_name = $('#file_name')
+            $file_name.text(files[0].name)
+            uploader.start()
+        },
+
+        UploadProgress: function(up, file) {
+            if(file.percent === 100){
+                segmentation_modal()
+            }
+        }
     }
 })
 uploader.init()
-uploader.bind('FilesAdded',function(uploader,files){
-    uploader.start()
-})
-uploader.bind('UploadProgress',function(uploader,file){
-    $('#uploading_progress').css('width',`${file.percent}%`)
-    if(file.percent === 100){
-        segmentation_modal();
-    }
-})
