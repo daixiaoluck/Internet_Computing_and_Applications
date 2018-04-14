@@ -16,27 +16,52 @@ function segmentation_modal(){
         }
     })
 }
+
+let $file_name = $('#file_name')
+let $uploading_progress = $('#uploading_progress')
+let $body = $('body')
+
 let uploader = new plupload.Uploader({
     url : '/upload',
     // 一定要有browse_button哦
     browse_button : 'browse',
     drop_element:'drag-area',
     filters:{
+        max_file_size:`${50*1024}kb`,
         mime_types:[
-            {title:"Video files",extensions:"mov,mp4,m4a"}
+            {title:"Video files",extensions:"mp4,mov"}
         ]
     },
     init:{
         FilesAdded:function(uploader,files){
-            let $file_name = $('#file_name')
             $file_name.text(files[0].name)
             uploader.start()
         },
 
-        UploadProgress: function(up, file) {
-            if(file.percent === 100){
-                segmentation_modal()
+        UploadProgress: function(up, file){
+            // console.log('The percentage information: ', file.percent)
+            $uploading_progress.width(`${file.percent}%`)
+        },
+
+        UploadComplete: function(up, files){
+            segmentation_modal()
+        },
+
+        Error: function(up, err) {
+            let errorMsg = err.message
+            if(err.code === plupload.FILE_SIZE_ERROR){
+                errorMsg = `The file size of "${err.file.name}" is not allowed.`
+            }else if(err.code === plupload.FILE_EXTENSION_ERROR){
+                errorMsg = `The file extension of "${err.file.name}" is not allowed.`
             }
+            let originalString =
+                `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>${errorMsg}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>`
+            $body.prepend(originalString)
         }
     }
 })

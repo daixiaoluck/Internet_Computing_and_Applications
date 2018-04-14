@@ -93,11 +93,23 @@ function upload_process(request, response) {
         form.uploadDir = __dirname + '/static/uploaded'
         form.maxFileSize = 50 * 1024 * 1024
         form.keepExtensions = true
+        form.onPart = function (part) {
+            if(!part.filename || part.filename.match(/\.(mp4|mov)$/i)) {
+                this.handlePart(part)
+            }
+            else {
+                reject(new Error('The file type is not allowed.'))
+            }
+        }
         form.parse(request, function(err, fields, files) {
             if (err) {
                 reject(err)
             } else {
                 let single_file = files.file
+                response.writeHead(200,{
+                    'Content-type':'text/plain'
+                })
+                response.end('success')
                 resolve(single_file)
             }
         })
