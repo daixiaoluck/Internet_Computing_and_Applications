@@ -1,3 +1,5 @@
+
+
 {{include './header.ejs' data}}
 
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -25,7 +27,8 @@
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+
+                    <h5 id="file_name" class="modal-title"></h5>
                 </div>
                 <div class="modal-body">
                     <p>The file has been uploaded.</p>
@@ -60,7 +63,7 @@
                 <input type="button" class="btn btn-primary" value="Select a File" id="browse">
             </div>
         </div>
-        <div id="file_name"></div>
+        <div id="file_name" class="col-md-offset-3 col-md-6" style="text-align:center;font-weight:bold;"></div>
     </div>
 
     
