@@ -60,6 +60,11 @@ body {
     float: left;
 }
 
+
+.navbar-brand {
+    font-family: 'Alfa Slab One', "Helvetica Neue";
+}
+
 @media (min-width:576px) {
     #banner {
         font-size: 40px;
@@ -92,3 +97,4 @@ menu {
     height: 218px;
     width: 100%;
 }
+
