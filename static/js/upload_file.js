@@ -34,6 +34,11 @@ let uploader = new plupload.Uploader({
     },
     init:{
         FilesAdded:function(uploader,files){
+            let max_files = 1
+            if(uploader.files.length > max_files){
+                alert(`You are allowed to add only ${max_files} files.`)
+                return false
+            }
             $file_name.text(files[0].name)
             uploader.start()
         },
