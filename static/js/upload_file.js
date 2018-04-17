@@ -25,6 +25,7 @@ let uploader = new plupload.Uploader({
     url : '/upload',
     // 一定要有browse_button哦
     browse_button : 'browse',
+    multi_selection:false,
     drop_element:'drag-area',
     filters:{
         max_file_size:`${50*1024}kb`,
@@ -36,6 +37,9 @@ let uploader = new plupload.Uploader({
         FilesAdded:function(uploader,files){
             let max_files = 1
             if(uploader.files.length > max_files){
+                plupload.each(files,function(file){
+                    uploader.removeFile(file)
+                })
                 alert(`You are allowed to add only ${max_files} files.`)
                 return false
             }
