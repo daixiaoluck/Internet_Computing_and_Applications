@@ -22,20 +22,31 @@
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+                    <h5 class="modal-title" id="file_name"></h5>
                 </div>
                 <div class="modal-body">
-                    <p>The file has been uploaded.</p>
+                    <p>The progress of upload:</p>
+                    <p>
+                        
+        <div class="progress">
+                <div id="uploading_progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+            </div>
+
+                    </p>
+                    
                     <p>The progress of segmentation:</p>
                     <p>
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped progress-bar-animated" id="segmentation_progress"></div>
                         </div>
+
                     </p>
+
+
                     <p id="my_video_link" class="text-right d-none">
-                        <span>Enjoy your movie meme:</span>
+                        <span>The file has been uploaded. Enjoy your movie meme:</span>
                         <!--<a href="/home/my_video">Your Video Meme</a>-->
-                        <a href="/home/vid_listing">Your Video Meme</a>
+                        <a href="/home/vid_listing" style="color: white; font-weight:bold;">Your Video Meme</a>
                     </p>
                 </div>
             </div>
@@ -52,15 +63,12 @@
                 </div>
             </div>
         </div>
-        <div class="row w-75 mx-auto">
+        <div class="d-flex justify-content-center align-items-center" style="margin-top:5%;">
             <div class="col-2">
-                <input type="button" class="btn btn-primary" value="Select a File" id="browse">
+                <input type="button" class="btn btn-primary" value="or by selecting a File" id="browse">
             </div>
         </div>
-        <div id="file_name"></div>
-        <div class="progress">
-            <div id="uploading_progress" class="progress-bar progress-bar-animated" role="progressbar"></div>
-        </div>
+     
     </div>
     
     <script src="/static/js/upload_file.js?{{timestamp}}"></script>
