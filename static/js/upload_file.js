@@ -1,7 +1,4 @@
-function segmentation_modal(){
-    $('#uploaded_modal').modal({
-        backdrop:'static'
-    })
+function web_socket_process(){
     let websocket = io.connect()
     let $segmentation_progress = $('#segmentation_progress')
     websocket.on('push_from_server',data=>{
@@ -47,13 +44,18 @@ let uploader = new plupload.Uploader({
             uploader.start()
         },
 
+        UploadFile:function(uploader,file){
+            $('#uploaded_modal').modal({
+                backdrop:'static'
+            })
+        },
+
         UploadProgress: function(up, file){
-            // console.log('The percentage information: ', file.percent)
             $uploading_progress.width(`${file.percent}%`)
         },
 
         UploadComplete: function(up, files){
-            segmentation_modal()
+            web_socket_process()
         },
 
         Error: function(up, err) {
